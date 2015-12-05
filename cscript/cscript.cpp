@@ -37,6 +37,12 @@ int cscript::go(int num, char *opts[])
         printf("Missing first parameter: filename\n");
         return 1;
       }
+//    int lp;
+//    for (lp = 0; lp < num; lp++)
+//      {
+//        printf ("param #%d: %s\n", lp, opts[lp]);
+//      }
+
     char *filename = opts[1];
 
     char *line = NULL;
@@ -59,7 +65,20 @@ int cscript::go(int num, char *opts[])
     else
       slash = filename + 1; // skip the slash
     char cmd[slen];
-    sprintf(cmd, "gcc -o /tmp/%s.bin -xc -", slash);
+
+    // first, we delete any old copy if there.
+    sprintf(cmd, "/tmp/%s.bin", slash);
+    int ret = unlink(cmd);
+    if (ret != 0)
+      {
+        if (errno != ENOENT) // not there is okay
+          {
+            printf("Unable to remove existing script binary: %s errno: %d\n", cmd, errno);
+            return 1;
+          }
+      }
+
+    sprintf(cmd, "gcc -Wall -o /tmp/%s.bin -xc -", slash);
     gcc = popen(cmd, "w");
     if (gcc == NULL)
       {
@@ -85,8 +104,23 @@ int cscript::go(int num, char *opts[])
     fclose(gcc);
     gcc = NULL;
 
-    // now run it
-
+    // now, if it compiled, run it
+    sprintf(cmd, "/tmp/%s.bin", slash);
+    char *scriptopts[num];
+    /* Copy over the params we got skipping the first one. */
+    scriptopts[0] = filename;
+    int lp;
+    for (lp = 1; lp < num; lp++)
+      { // lp+1 will copy the null
+        scriptopts[lp] = opts[lp+1];
+        printf("Passing param #%d %s\n",lp, scriptopts[lp]);
+      }
+    ret = execv(cmd, scriptopts);
+    if (ret == -1)
+      {
+        printf("Unable to start %s, errno: %d\n", cmd, errno);
+        return 1;
+      }
     return 0;
   }
 
