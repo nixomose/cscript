@@ -1,5 +1,4 @@
 #!/home/nixo/git/cscript/cscript/Debug/cscript
-
 #include <stdio.h>
 
 int main(int num, char *opts[])

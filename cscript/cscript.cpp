@@ -67,22 +67,13 @@ int cscript::go(int num, char *opts[])
     if (slash == NULL)
       slash = filename;
     else
-      slash = filename + 1; // skip the slash
+      slash = slash + 1; // skip the slash
     char cmd[slen];
 
-    // first, we delete any old copy if there.
-    sprintf(cmd, "/tmp/%s.bin", slash);
-    int ret = unlink(cmd);
-    if (ret != 0)
-      {
-        if (errno != ENOENT) // not there is okay
-          {
-            printf("Unable to remove existing script binary: %s errno: %d\n", cmd, errno);
-            return 1;
-          }
-      }
+    char binname[slen];
+    sprintf(binname, "/tmp/%s.%d", slash, getpid());
 
-    sprintf(cmd, "gcc -Wall -o /tmp/%s.bin -xc -", slash);
+    sprintf(cmd, "gcc -Wall -o %s -xc -", binname);
     gcc = popen(cmd, "w");
     if (gcc == NULL)
       {
@@ -93,23 +84,24 @@ int cscript::go(int num, char *opts[])
     int linecount = 0;
     while ((read = getline(&line, &len, f)) != -1)
       {
-        if (linecount == 0)
-          {
-            line[0] = '/';
-            line[1] = '/';
-          }
-        fprintf(gcc, "%s", line);
+        if (linecount > 0)
+          fprintf(gcc, "%s", line);
         linecount++;
       }
 
     free(line);
     fclose(f);
     f = NULL;
-    fclose(gcc);
+    int gccretcode = pclose(gcc);
     gcc = NULL;
 
+    if (gccretcode != 0)
+      {
+        printf("\ncscript: compile failed.\n", errno);
+        return 1;
+      }
+
     // now, if it compiled, run it
-    sprintf(cmd, "/tmp/%s.bin", slash);
     char *scriptopts[num];
     /* Copy over the params we got skipping the first one. */
     scriptopts[0] = filename;
@@ -119,7 +111,8 @@ int cscript::go(int num, char *opts[])
         scriptopts[lp] = opts[lp+1];
         printf("Passing param #%d %s\n",lp, scriptopts[lp]);
       }
-    ret = execv(cmd, scriptopts);
+    hey_killer(binname);
+    int ret = execv(binname, scriptopts);
     if (ret == -1)
       {
         printf("Unable to start %s, errno: %d\n", cmd, errno);
@@ -127,6 +120,29 @@ int cscript::go(int num, char *opts[])
       }
     return 0;
   }
+
+void cscript::hey_killer(const char *binname)
+  {
+    /* we want to delete the process out of temp but we have to wait
+     * for the process to start to do that, but by the time the process starts,
+     * we lose execution control so we fork, wait 10 seconds then kill then exit. */
+
+    int childpid = fork();
+    if (childpid == -1)
+      {
+        /* If we fail to fork, then the binary will sit in /tmp and get cleaned up
+         * by somebody else. */
+        return;
+      }
+    if (childpid != 0)
+      return; // we're the parent, go run the binary.
+
+    sleep(5);
+    // not much point in checking for errors.
+    unlink(binname);
+    exit(0);
+  }
+
 
 
 int main(int num, char *opts[])

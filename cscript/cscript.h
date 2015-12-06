@@ -10,6 +10,9 @@ class cscript
 
   private:
 
+    void hey_killer(const char *binname);
+
+
     int pid;
     int pipefds[2];
     FILE *f;
