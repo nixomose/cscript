@@ -10,11 +10,6 @@
 
 #include "cscript.h"
 
-/* apparently if you specify the language you can pipe
- gcc -o lexer.o -xc -
- now, how to link...
- */
-
 cscript::cscript()
   {
     f = NULL;
@@ -41,11 +36,6 @@ int cscript::go(int num, char *opts[])
         printf("Missing first parameter: filename\n");
         return 1;
       }
-//    int lp;
-//    for (lp = 0; lp < num; lp++)
-//      {
-//        printf ("param #%d: %s\n", lp, opts[lp]);
-//      }
 
     char *filename = opts[1];
 
@@ -73,7 +63,7 @@ int cscript::go(int num, char *opts[])
     char binname[slen];
     sprintf(binname, "/tmp/%s.%d", slash, getpid());
 
-    sprintf(cmd, "gcc -Wall -o %s -xc -", binname);
+    sprintf(cmd, "gcc -Wall -o %s -xc++ -", binname);
     gcc = popen(cmd, "w");
     if (gcc == NULL)
       {
@@ -84,9 +74,17 @@ int cscript::go(int num, char *opts[])
     int linecount = 0;
     while ((read = getline(&line, &len, f)) != -1)
       {
-        if (linecount > 0)
-          fprintf(gcc, "%s", line);
-        linecount++;
+        if (linecount == 0)
+          {
+            linecount++;
+            if (strlen(line) > 1)
+              {
+                if (line[0] == '#' && line[1] == '!')
+                  continue; // if the first line is shebang, skip it
+              }
+          }
+        fprintf(gcc, "%s", line);
+        fprintf(stdout, "%s", line);
       }
 
     free(line);
