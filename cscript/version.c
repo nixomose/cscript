@@ -1,1 +1,0 @@
-#define VERSION_DATE "20151205_2019"

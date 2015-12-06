@@ -4,6 +4,10 @@
 #include <errno.h>
 #include <unistd.h>
 
+#ifndef VERSION_DATE
+  #include "version.h"
+#endif
+
 #include "cscript.h"
 
 /* apparently if you specify the language you can pipe
