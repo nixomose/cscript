@@ -97,7 +97,7 @@ int cscript::go(int num, char *opts[])
 
     if (gccretcode != 0)
       {
-        printf("\ncscript: compile failed.\n", errno);
+        printf("\ncscript: compile failed.\n");
         return 1;
       }
 
