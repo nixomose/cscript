@@ -1,7 +1,7 @@
 
 
 CC=g++
-CFLAGS=-c -Wall
+CFLAGS=-c -Wall -O2
 LDFLAGS=
 SOURCES=cscript.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
