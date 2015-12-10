@@ -82,10 +82,24 @@ int cscript::go(int num, char *opts[], char *link_options)
       slash = slash + 1; // skip the slash
     char cmd[slen];
 
+    int cpp = 0;
+    char *dot = rindex(slash, '.');
+    if (dot != NULL)
+      if (strcasecmp(dot, ".cpp") == 0)
+        cpp = 1;
+
     char binname[slen];
     sprintf(binname, "/tmp/%s.%d", slash, getpid());
 
-    sprintf(cmd, "gcc -Wall -o %s -xc++ - %s", binname, link_options);
+    char *cppoption = "";
+    char *cppparam = "";
+    if (cpp)
+      {
+        cppoption = "-lstdc++";
+        cppparam = "++";
+      }
+
+    sprintf(cmd, "gcc -Wall -o %s -xc%s - %s %s", binname, cppparam, link_options, cppoption);
     gcc = popen(cmd, "w");
     if (gcc == NULL)
       {
