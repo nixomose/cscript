@@ -6,7 +6,7 @@ class cscript
   public:
     cscript();
     virtual ~cscript();
-    int go(int num, char *opts[]);
+    int go(int num, char *opts[], char *link_options);
 
   private:
 

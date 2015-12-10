@@ -1,5 +1,6 @@
 #!/home/nixo/git/cscript/cscript/Debug/cscript
 #include <stdio.h>
+#include <math.h>
 
 int main(int num, char *opts[])
   {
@@ -8,8 +9,9 @@ int main(int num, char *opts[])
     int lp;
     for (lp = 0; lp < num; lp++)
       {
-        printf ("param #%d: %s\n", lp, opts[lp]);
+        printf ("param (%d) #%d: %s\n", (int)exp2(lp), lp, opts[lp]);
       }
+    
     return 0;
   }
 
