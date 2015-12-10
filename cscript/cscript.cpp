@@ -91,12 +91,14 @@ int cscript::go(int num, char *opts[], char *link_options)
     char binname[slen];
     sprintf(binname, "/tmp/%s.%d", slash, getpid());
 
-    char *cppoption = "";
-    char *cppparam = "";
+    char cppoption[20];
+    char cppparam[20];
+    strcpy(cppoption, "");
+    strcpy(cppparam, "");
     if (cpp)
       {
-        cppoption = "-lstdc++";
-        cppparam = "++";
+        strcpy(cppoption, "-lstdc++");
+        strcpy(cppparam, "++");
       }
 
     sprintf(cmd, "gcc -Wall -o %s -xc%s - %s %s", binname, cppparam, link_options, cppoption);
