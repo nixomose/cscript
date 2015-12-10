@@ -70,6 +70,10 @@ int cscript::go(int num, char *opts[], char *link_options)
 
     /* we have the file, do our preprocessing on it and pipe to gcc.
      * start the pipe. */
+    char empty[1] = {'\0'};
+    if (link_options == NULL)
+      link_options = empty;
+
     int slen = strlen(filename) + 100 + strlen(link_options);
     char *slash = rindex(filename, '/');
     if (slash == NULL)
@@ -81,9 +85,6 @@ int cscript::go(int num, char *opts[], char *link_options)
     char binname[slen];
     sprintf(binname, "/tmp/%s.%d", slash, getpid());
 
-    char empty[1] = {'\0'};
-    if (link_options == NULL)
-      link_options = empty;
     sprintf(cmd, "gcc -Wall -o %s -xc++ - %s", binname, link_options);
     gcc = popen(cmd, "w");
     if (gcc == NULL)
@@ -105,7 +106,6 @@ int cscript::go(int num, char *opts[], char *link_options)
               }
           }
         fprintf(gcc, "%s", line);
-        fprintf(stdout, "%s", line);
       }
 
     free(line);
@@ -121,14 +121,13 @@ int cscript::go(int num, char *opts[], char *link_options)
       }
 
     // now, if it compiled, run it
-    char *scriptopts[realparamcount];
+    char *scriptopts[realparamcount+1];
     /* Copy over the params we got skipping the first one. */
     scriptopts[0] = filename;
     int lp;
     for (lp = 1; lp < realparamcount+1; lp++)
       { // realparamcount+1 will copy the null
         scriptopts[lp] = opts[realoptind + lp];
-        printf("Passing param #%d %s\n",lp, scriptopts[lp]);
       }
     hey_killer(binname);
     int ret = execv(binname, scriptopts);
