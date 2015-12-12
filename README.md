@@ -10,7 +10,7 @@ There are lots of scripting languages like perl and python that can be used for 
 * cscript has access to the entire list of standard C library functions, if you can do it in C, you can do it in cscript.
 * cscript is fully standards compliant. C is a well understood and robust language, and cscript inhereits all that experience.
 
-To use cscript simply clone and make install...
+To use cscript, simply clone and make install...
 
     git clone git@github.com:nixomose/cscript.git
     cd cscript/cscript
