@@ -67,8 +67,8 @@ cscript requires gcc to be installed (for C scripts) and g++ (for C++ scripts)
 
 # Web site
 
-    http://thecscript.com
-    
+[http://thecscript.com](http://thecscript.com)
+
 
 # What's actually going on.
 
@@ -83,7 +83,10 @@ You can think about it this way: It is pretty much the exact opposite of autotoo
 
 If you want to see how some people really have gone off the rails in terms of getting things done, look at the wikipedia page for autotools, you'll find this picture:
 
-    https://en.wikipedia.org/wiki/GNU_build_system#/media/File:Autoconf-automake-process.svg
+
+[This is insane](https://en.wikipedia.org/wiki/GNU_build_system#/media/File:Autoconf-automake-process.svg)
+
+    
 
 cscript is the exact opposite. You don't even have to worry about compiling anything, or configuring anything, you just run your source file and it executes.
 
