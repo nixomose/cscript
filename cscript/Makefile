@@ -1,19 +1,29 @@
 
-
 CC=g++
 CFLAGS=-c -Wall -O2
 LDFLAGS=
 SOURCES=cscript.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
-EXECUTABLE=bin/cscript
+TARGET=cscript
+BINDIR=/usr/bin
 
-all: bin $(SOURCES) $(EXECUTABLE)
+all: bin $(SOURCES) $(TARGET)
     
-$(EXECUTABLE): $(OBJECTS) 
+$(TARGET): $(OBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
         
 .cpp.o:
 	$(CC) $(CFLAGS) $< -o $@    
-    
+
 bin:
 	mkdir bin
+
+install: all
+	install -D $(TARGET) $(BINDIR)/$(TARGET)
+
+uninstall:
+	-rm $(BINDIR)/$(TARGET)
+
+clean:
+	-rm -f $(OBJECTS)
+	-rm -f $(TARGET)

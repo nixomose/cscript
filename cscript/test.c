@@ -1,4 +1,5 @@
-#!/home/nixo/git/cscript/cscript/Debug/cscript
+#!/usr/bin/cscript -lm
+
 #include <stdio.h>
 #include <math.h>
 

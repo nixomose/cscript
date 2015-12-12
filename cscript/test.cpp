@@ -1,4 +1,5 @@
-#!/home/nixo/git/cscript/cscript/Debug/cscript
+#!/usr/bin/cscript
+
 #include <stdio.h>
 
 class test
