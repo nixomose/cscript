@@ -8,7 +8,7 @@ There are lots of scripting languages like perl and python that can be used for 
 
 * cscript scripts are precompiled, so the script runs much faster than any interpreted scripting language script.
 * cscript has access to the entire list of standard C library functions, if you can do it in C, you can do it in cscript.
-* cscript is fully standards compliant. C is a well understood and robust language, and cscript inhereits all that experience.
+* cscript is fully standards compliant. C is a well understood and robust language, and cscript inherits all that experience.
 
 To use cscript, simply clone and make install...
 
