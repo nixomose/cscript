@@ -92,7 +92,7 @@ cscript is the exact opposite. You don't even have to worry about compiling anyt
 
 # Future plans
 
-I'm going to add the ability to pass more compiler switches to the source file so people who feel the need to compile position independant code can do so.
+I'm going to add the ability to pass more compiler switches to the source file so people who feel the need to compile position independent code can do so.
 Maybe other gcc languages can be supported.
 Suggestions welcome.
 
